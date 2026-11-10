@@ -39,3 +39,10 @@ stepday:
     # Single-user auth until a real login module exists (docs/decisions.md, D-AUTH).
     username: ${STEPDAY_USER:stepday}
     password: ${STEPDAY_PASSWORD:stepday}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    persist-authorization: true

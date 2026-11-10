@@ -10,6 +10,7 @@ docker compose up --build
 
 - aplikacja: http://localhost:8000 (login `stepday` / `stepday`, zmiana: `STEPDAY_USER`, `STEPDAY_PASSWORD`)
 - API: http://localhost:8080/api
+- Swagger UI: http://localhost:8000/api/swagger-ui.html (przycisk „Authorize” → ten sam login i hasło)
 
 ## Testy
 

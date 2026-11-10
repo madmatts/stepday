@@ -12,5 +12,6 @@ Wymagania: Java 25, Maven 3.9, Node 20, Docker (Testcontainers potrzebuje dział
 | Front: build | `cd stepday-web && npm run build` |
 | E2E + porównanie z makietami (390 px), wymaga `docker compose up` | `cd stepday-web && npm run e2e` (czyści lokalną bazę compose!) |
 | Całość | `docker compose up --build` → front http://localhost:8000, API http://localhost:8080/api |
+| Swagger UI | http://localhost:8000/api/swagger-ui.html (specyfikacja: `/api/v3/api-docs`) |
 
 Login w trybie jednego użytkownika: `STEPDAY_USER` / `STEPDAY_PASSWORD` (domyślnie `stepday` / `stepday`).

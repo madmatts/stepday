@@ -20,6 +20,8 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/actuator/health").permitAll()
+                        // Dokumentacja API (Swagger UI) jest publiczna, wywołania API nadal wymagają logowania.
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 // API bezstanowe, uwierzytelniane nagłówkiem — CSRF nie dotyczy.
