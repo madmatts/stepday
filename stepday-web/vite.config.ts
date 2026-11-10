@@ -37,8 +37,10 @@ export default defineConfig({
   },
   server: {
     host: true,
+    allowedHosts: ['.trycloudflare.com'],   // Vite blokuje nieznane hosty
+    hmr: { clientPort: 443 },               // hot reload przez wss za tunelem
     proxy: {
-      '/api': process.env.API_URL ?? 'http://localhost:8080',
+      '/api': { target: 'http://localhost:8080', changeOrigin: true },
     },
   },
   test: {
