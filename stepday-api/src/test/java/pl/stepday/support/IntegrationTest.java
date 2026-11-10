@@ -24,7 +24,7 @@ import pl.stepday.user.CurrentUser;
  * Baza testów integracyjnych: pełny kontekst, PostgreSQL w Testcontainers, zegar testowy
  * ustawiony na wtorek 10.11.2026 12:00 Europe/Warsaw (dzień z makiet), czysta baza przed testem.
  */
-@SpringBootTest(properties = "stepday.closing.enabled=false")
+@SpringBootTest(properties = {"stepday.closing.enabled=false", "stepday.push.enabled=false"})
 @AutoConfigureMockMvc
 @Import({PostgresTestConfig.class, IntegrationTest.ClockConfig.class})
 public abstract class IntegrationTest {

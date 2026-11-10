@@ -1,6 +1,9 @@
 <script setup lang="ts">
 // „Przypomnienie” z przełącznikiem (makiety Lista i Licznik). Jedna godzina — decyzja D7.
 import { useId } from 'vue'
+import { isIos, isStandalone } from '@/composables/usePush'
+
+const needsInstall = isIos && !isStandalone
 
 const on = defineModel<boolean>('on', { required: true })
 const time = defineModel<string>('time', { required: true })
@@ -19,6 +22,7 @@ const id = useId()
       <span class="knob" />
     </button>
   </div>
+  <div v-if="on && needsInstall" class="hint">Przypomnienia zadziałają po dodaniu Stepday do ekranu początkowego (Safari → Udostępnij).</div>
 </template>
 
 <style scoped>

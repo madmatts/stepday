@@ -22,6 +22,7 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript((auth) => {
     localStorage.setItem('stepday.auth', auth.replace('Basic ', ''))
     localStorage.setItem('stepday.installHintDismissed', '1')
+    localStorage.setItem('stepday.reminderSetupDismissed', '1')
   }, AUTH)
 })
 

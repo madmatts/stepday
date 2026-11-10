@@ -122,3 +122,12 @@ Nawigacja do „Układu dnia” i „Podsumowania tygodnia” to dwie ikony w wi
 
 ### A28. PWA: offline i aktualizacje
 Zapisy idą przez kolejkę w IndexedDB (`src/sync/outbox.ts`). Online: od razu do serwera, chyba że w kolejce coś czeka (wtedy na koniec kolejki, żeby zachować kolejność). Offline: zapis w kolejce + lokalny podgląd zmiany na ostatniej kopii dnia. Stan dnia po synchronizacji zawsze z serwera. Kolejka wysyła się przy `online`, po powrocie do aplikacji i co 30 s. Odpowiedź 4xx (np. 409 — dzień zamknięty, A20) usuwa zmianę i pokazuje komunikat. Service worker: precache aplikacji + NetworkFirst dla `GET /api/days/*`. Nowa wersja aplikacji aktywuje się bez przeładowania otwartej strony.
+
+### A29. Web Push (rozszerzenie schematu — do potwierdzenia)
+Dokument zostawia szczegóły push poza zakresem, ale wymaga przypomnień z `reminder_time`. Migracja **V3** dodaje trzy tabele spoza dokumentu:
+- `push_subscription` — subskrypcje przeglądarek (endpoint, klucze),
+- `reminder_log (template_id, local_date)` — jedno przypomnienie na blok i dzień (bez duplikatów przy restarcie / wielu instancjach),
+- `app_setting` — klucze VAPID generowane przy pierwszym starcie (bez ręcznej konfiguracji).
+
+Szyfrowanie RFC 8291 (aes128gcm) i VAPID RFC 8292 na prymitywach JDK, sprawdzone wektorem z RFC 8291. Zadanie co minutę wysyła przypomnienie, gdy w strefie użytkownika minęła `reminder_time` (najwyżej 30 min temu), blok dziś wypada i jest `PENDING`. Subskrypcja z odpowiedzią 404/410 jest usuwana. Front prosi o zgodę tylko po kliknięciu i tylko tam, gdzie push dotrze (na iOS wyłącznie w zainstalowanej PWA); w edytorze przy przełączniku przypomnienia na iPhonie poza PWA pojawia się podpowiedź. `sub` w JWT: `https://stepday.pl` (`STEPDAY_PUSH_SUBJECT`), bez danych osobowych.
+Zmiana: wszystko w pakiecie `pl.stepday.push`; usunięcie = migracja `DROP TABLE` + usunięcie pakietu.

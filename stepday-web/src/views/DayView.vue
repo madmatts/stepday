@@ -13,6 +13,7 @@ import PathArrow from '@/components/day/PathArrow.vue'
 import EndOfDay from '@/components/day/EndOfDay.vue'
 import InstallHint from '@/components/common/InstallHint.vue'
 import SyncBanner from '@/components/common/SyncBanner.vue'
+import ReminderSetup from '@/components/common/ReminderSetup.vue'
 
 const route = useRoute()
 const dateParam = computed(() => (route.params.date as string | undefined) ?? null)
@@ -52,6 +53,7 @@ const previousWeek = computed(() => day.value ? addDays(mondayOf(day.value.date)
 
       <InstallHint />
       <SyncBanner />
+      <ReminderSetup v-if="day.steps.length || day.allDay.length" />
 
       <BoardWeekStrip :week="day.week" :board="day.board" :progress="day.progress" :selected-date="day.date" />
 
