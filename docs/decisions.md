@@ -110,3 +110,6 @@ Nowa instancja kopiuje zamrożoną definicję instancji źródłowej (nie bież�
 
 ### A24. Zamykanie: chwila, kolejność, uzupełnianie
 Zadanie co minutę (`stepday.closing.interval`, domyślnie `PT1M`); dzień D zamyka się, gdy w strefie użytkownika minie `day_start` dnia D+1. Dni zamykane po kolei od dnia po ostatnim zamkniętym, każdy w osobnej transakcji z blokadą wiersza `day` (zapisy z telefonu blokują ten sam wiersz). Brakujące dni są generowane i zamykane jako `MISSED` (A4). Dzień utworzony przez przeniesienie zaległości nie jest „brakujący” — jego stan wynika z reguł (np. jedyny blok przeniesiony dalej → `FULL`). Użytkownik bez żadnego dnia nie jest uzupełniany.
+
+### A25. Podsumowanie tygodnia: kształt odpowiedzi
+`GET /weeks/{weekStart}/summary` (weekStart = poniedziałek, inaczej 400). Pola: `outcome` (`SUCCESS`|`GAPS`), `finished` (false, gdy tydzień trwa — dni przyszłe/otwarte mają `status: null`), `counts` (full/partial/missed/completed), `days[]`, `gaps[]`. `gaps` pochodzi z zapytania z dokumentu (dosłownie) + `config` dla jednostki i progu; dni bez wiersza `day` dochodzą jako `MISSED` z pustą listą bloków. Teksty („Nie odhaczono: …”, „brakowało 1”) składa front z danych.
