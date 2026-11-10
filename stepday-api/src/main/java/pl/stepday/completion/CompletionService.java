@@ -191,7 +191,7 @@ public class CompletionService {
     /** Instancja użytkownika w dniu, który nie jest jeszcze zamknięty (dzień edytowalny do zamknięcia). */
     private BlockInstance open(UUID userId, UUID instanceId, BlockType expected) {
         BlockInstance bi = instances.findById(instanceId).orElseThrow(() -> new NotFoundException("blok " + instanceId));
-        Day day = days.findById(bi.getDayId()).orElseThrow();
+        Day day = days.lockById(bi.getDayId()).orElseThrow();
         if (!day.getUserId().equals(userId)) {
             throw new NotFoundException("blok " + instanceId);
         }

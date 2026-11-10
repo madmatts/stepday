@@ -101,3 +101,12 @@ Zwraca 409. Dzień jest edytowalny do zamknięcia (dokument, sekcja 5). Kolejka 
 
 ### A21. Postęp po „Pomiń”
 Postęp na pominiętym bloku (odhaczenie pozycji, przyrost licznika) zdejmuje `SKIPPED` i stan liczy się od nowa. „Pomiń” na bloku `DONE` zwraca 409. Każdy zapis zwraca świeży widok dnia.
+
+### A22. Polityka zaległych przy zamykaniu
+Polityka (`overdue_policy`) jest czytana z **bieżącego** szablonu w chwili zamknięcia (instancja jej nie kopiuje — schemat z dokumentu nie ma takiej kolumny). Szablon usunięty → `DROP`.
+
+### A23. Co przechodzi z zaległym blokiem
+Nowa instancja kopiuje zamrożoną definicję instancji źródłowej (nie bieżący szablon) oraz pozycje listy **ze stanem odhaczenia** (zaczęte zakupy kontynuuje się, a nie zaczyna od nowa). Licznik startuje od 0, bo `value_int` musi być sumą zdarzeń tej instancji.
+
+### A24. Zamykanie: chwila, kolejność, uzupełnianie
+Zadanie co minutę (`stepday.closing.interval`, domyślnie `PT1M`); dzień D zamyka się, gdy w strefie użytkownika minie `day_start` dnia D+1. Dni zamykane po kolei od dnia po ostatnim zamkniętym, każdy w osobnej transakcji z blokadą wiersza `day` (zapisy z telefonu blokują ten sam wiersz). Brakujące dni są generowane i zamykane jako `MISSED` (A4). Dzień utworzony przez przeniesienie zaległości nie jest „brakujący” — jego stan wynika z reguł (np. jedyny blok przeniesiony dalej → `FULL`). Użytkownik bez żadnego dnia nie jest uzupełniany.
