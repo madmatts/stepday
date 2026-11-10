@@ -54,7 +54,7 @@ Brakujący dzień jest generowany jak zwykle (zamrożone instancje, żeby „co 
 Zaczyna się w poniedziałek (makieta: „2–8 listopada”).
 
 ### A6. Licznik w UI
-Przycisk „+” zatrzymuje się na celu (jak w makiecie), serwer przyjmuje dowolną deltę, a `value_int` nie spada poniżej 0.
+Przycisk „+” zatrzymuje się na celu (jak w makiecie), a „−” na zerze. Serwer przyjmuje dowolną deltę i **nie przycina** wyniku: dokument definiuje `value_int` jako dokładną sumę `counter_event.delta` (przycinanie rozjechałoby sumę przy scalaniu zapisów z dwóch urządzeń).
 
 ### A7. „Zastosuj także dziś”
 Tylko flaga `applyToday` w `PUT /templates/{id}` (brak ekranu w makietach).
@@ -92,3 +92,12 @@ Flaga `fromCalendar` w widoku dnia = reguła szablonu nie jest codzienna (ta sam
 
 ### A18. Postęp „kroków dziś”
 `progress.done` = kroki (`STEP`) w stanie `DONE`; `total` = kroki dnia bez `CARRIED`. Pominięte nie liczą się jako zrobione (jak w makiecie). Bloki `ALL_DAY` nie wchodzą do licznika kroków, ale wchodzą do stanu dnia.
+
+### A19. „Ostatni zapis wygrywa” a zegary
+Zapisy pozycji listy i notatki mogą nieść `changedAt` (czas zmiany na telefonie, z kolejki offline). Zapis wygrywa, jeśli nie jest starszy niż ostatni zapisany; zapis bez `changedAt` dostaje czas serwera. Wiersze generowane przez `ensureDay` mają `updated_at = epoch` („nie zmieniane przez klienta”), więc pierwszy zapis z telefonu wygrywa nawet przy spóźnionym zegarze.
+
+### A20. Zapis do zamkniętego dnia
+Zwraca 409. Dzień jest edytowalny do zamknięcia (dokument, sekcja 5). Kolejka offline, która dotrze po zamknięciu (po `day_start` następnego dnia), dostaje 409 i front pokazuje, że zmiana nie weszła.
+
+### A21. Postęp po „Pomiń”
+Postęp na pominiętym bloku (odhaczenie pozycji, przyrost licznika) zdejmuje `SKIPPED` i stan liczy się od nowa. „Pomiń” na bloku `DONE` zwraca 409. Każdy zapis zwraca świeży widok dnia.

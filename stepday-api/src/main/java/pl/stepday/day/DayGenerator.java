@@ -53,18 +53,22 @@ public class DayGenerator {
         return day.id();
     }
 
-    /** Kopia definicji z szablonu (nazwa, typ, rola, config, sort_key, aktywne pozycje listy). */
+    /**
+     * Kopia definicji z szablonu (nazwa, typ, rola, config, sort_key, aktywne pozycje listy).
+     * {@code updated_at = epoch}: wiersz nie był jeszcze zmieniany przez klienta, więc pierwszy zapis
+     * z telefonu wygrywa niezależnie od różnicy zegarów (A19).
+     */
     private void insertInstance(UUID dayId, UUID templateId) {
         List<UUID> inserted = jdbc.queryForList("""
-                INSERT INTO block_instance (day_id, template_id, name, type, role, config, sort_key)
-                SELECT ?, t.id, t.name, t.type, t.role, t.config, t.sort_key
+                INSERT INTO block_instance (day_id, template_id, name, type, role, config, sort_key, updated_at)
+                SELECT ?, t.id, t.name, t.type, t.role, t.config, t.sort_key, 'epoch'::timestamptz
                 FROM block_template t WHERE t.id = ?
                 ON CONFLICT (day_id, template_id) WHERE carried_from_id IS NULL DO NOTHING
                 RETURNING id""", UUID.class, dayId, templateId);
         for (UUID instanceId : inserted) {
             jdbc.update("""
-                    INSERT INTO instance_item (instance_id, label, sort_key)
-                    SELECT ?, label, sort_key FROM template_item
+                    INSERT INTO instance_item (instance_id, label, sort_key, updated_at)
+                    SELECT ?, label, sort_key, 'epoch'::timestamptz FROM template_item
                     WHERE template_id = ? AND archived_at IS NULL""", instanceId, templateId);
         }
     }
