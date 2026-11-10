@@ -87,6 +87,10 @@ public abstract class IntegrationTest {
         return auth(MockMvcRequestBuilders.put(url, vars));
     }
 
+    protected static MockHttpServletRequestBuilder patch(String url, Object... vars) {
+        return auth(MockMvcRequestBuilders.patch(url, vars));
+    }
+
     protected static MockHttpServletRequestBuilder delete(String url, Object... vars) {
         return auth(MockMvcRequestBuilders.delete(url, vars));
     }
