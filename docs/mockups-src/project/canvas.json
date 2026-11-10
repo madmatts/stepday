@@ -1,0 +1,84 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Braki.dc.html": {
+      "h": 1000,
+      "title": "7 · Podsumowanie tygodnia: braki",
+      "w": 390,
+      "x": 3290,
+      "y": 0
+    },
+    "Kiedy.dc.html": {
+      "h": 1000,
+      "title": "4 · Kiedy: reguła powtarzania",
+      "w": 390,
+      "x": 1880,
+      "y": 0
+    },
+    "Licznik.dc.html": {
+      "h": 1230,
+      "title": "3 · Konfiguracja: licznik",
+      "w": 390,
+      "x": 1410,
+      "y": 0
+    },
+    "Lista.dc.html": {
+      "h": 1180,
+      "title": "2 · Konfiguracja: lista",
+      "w": 390,
+      "x": 940,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 1140,
+      "is_interactive": true,
+      "title": "Stepday · widok dnia",
+      "w": 390,
+      "x": 0,
+      "y": 0
+    },
+    "Sukces.dc.html": {
+      "h": 844,
+      "title": "6 · Podsumowanie tygodnia: sukces",
+      "w": 390,
+      "x": 2820,
+      "y": 0
+    },
+    "Typ.dc.html": {
+      "h": 920,
+      "title": "1 · Wybór typu bloku",
+      "w": 390,
+      "x": 470,
+      "y": 0
+    },
+    "Uklad.dc.html": {
+      "h": 1060,
+      "title": "5 · Układ dnia",
+      "w": 390,
+      "x": 2350,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-11-10T11:25:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {},
+  "order": [
+    "Main.dc.html",
+    "Typ.dc.html",
+    "Lista.dc.html",
+    "Licznik.dc.html",
+    "Kiedy.dc.html",
+    "Uklad.dc.html",
+    "Sukces.dc.html",
+    "Braki.dc.html"
+  ],
+  "pages": [],
+  "title": "Stepday · widok dnia"
+}

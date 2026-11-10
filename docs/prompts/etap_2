@@ -1,0 +1,46 @@
+Kontynuujesz pracę nad aplikacją Stepday (stepday.pl). Etap 1 jest wdrożony w tym repozytorium. Teraz realizujesz etap 2 według zaakceptowanego planu. Nie wymyślaj własnego designu ani własnego modelu danych.
+
+## Źródła prawdy
+
+1. Plan etapu 2 (ocena, warstwa danych, reguły, API, kroki): https://claude.ai/artifact/DL4mNfHT23EuQJWFPEXuyx
+2. Makiety (canvas, plansze E2 · 8 do E2 · 14 w drugim rzędzie oraz zmieniony widok dnia): https://claude.ai/artifact/JQX4MLH2DzerF97cmeMvcc
+3. Dokument etapu 1 (obowiązuje nadal, etap 2 go rozszerza): https://claude.ai/artifact/SnrchJn1CzUNj2n9rksqkC
+
+Przeczytaj wszystkie trzy w całości, zanim zmienisz kod. Jeśli któregoś nie możesz otworzyć, przerwij i poproś o eksport do docs/. Nie zgaduj treści.
+Pierwszeństwo: dane i zachowanie według planu, wygląd według makiet. Sprzeczności wypisz i zapytaj.
+
+## Zakres etapu 2
+
+Konta (e-mail z hasłem, Google), podgląd dni bieżącego tygodnia z edycją tylko dzisiaj, miejsce "Na początku" w ścieżce, dwa szablony startowe po trzy bloki, ustawienia konta, powiadomienia Web Push.
+
+## Reguły, których nie wolno zgubić
+
+- Sesja w ciasteczku HttpOnly, Secure, SameSite=Lax. Dane sesji w PostgreSQL (Spring Session JDBC). Redis tylko jako cache. Żadnych tokenów w localStorage.
+- Każde zapytanie o dane jest zawężone do zalogowanego użytkownika. Dodaj test, że konto A nie widzi i nie zmienia danych konta B.
+- Pierwsze konto po wdrożeniu przejmuje wiersz app_user z etapu 1. Historia nie może zginąć.
+- Konto zawsze ma co najmniej jeden sposób logowania (409 LAST_LOGIN_METHOD).
+- Łączenie tożsamości po adresie e-mail tylko przy adresie potwierdzonym po obu stronach.
+- Zapis wyłącznie do dnia bieżącego i otwartego. Inaczej 409 DAY_NOT_CURRENT, egzekwowane na serwerze.
+- Podgląd dnia przyszłego niczego nie zapisuje. ensureDay działa tylko dla dzisiaj.
+- Szablony startowe tworzą zwykłe bloki. Powtórne zastosowanie nie dubluje (starter_key).
+- Powiadomienia: bez duplikatów (notification_log), cisza nocna przesuwa wysyłkę na jej koniec, martwe subskrypcje są usuwane.
+- Reguły etapu 1 zostają bez zmian: próg 80%, stany FULL / PARTIAL / MISSED, CARRY_OVER najwyżej 2 razy, wpis nigdy nie znika.
+- Hasła Argon2id. Sekrety (Google, VAPID, SMTP) tylko w zmiennych środowiskowych, nigdy w repozytorium.
+- Interfejs po polsku, cele dotykowe co najmniej 44 px, kolory i fonty z makiet. Przycisk Google zgodny z wytycznymi Google.
+
+## Decyzje
+
+Sekcja "Decyzje do akceptacji" w planie pokazuje, co właściciel zaakceptował (zaznaczone pola) i co skomentował. Pozycje niezaznaczone traktuj jako nierozstrzygnięte: zapytaj, zanim je zaimplementujesz. Własne założenia dopisuj do docs/decisions.md.
+
+## Sposób pracy
+
+1. Krok 1 planu to rozpoznanie: opisz obecną autoryzację, właściciela danych i stan Web Push w kodzie. Przedstaw plan zmian i zaczekaj na moje "OK".
+2. Potem kroki 2 do 9 z planu, po kolei. Każdy kończy się zielonymi testami (PostgreSQL w Testcontainers, zegar testowy dla czasu), zanim zaczniesz następny.
+3. Front budujesz razem z krokiem, którego dotyczy. Każdy ekran porównaj z makietą w Playwright przy szerokości 390 px i opisz odchylenia.
+4. Zaktualizuj CLAUDE.md o reguły etapu 2.
+5. Małe, opisowe commity na gałęzi etap-2. Nie pushuj na main bez mojej zgody.
+6. Logowanie przez Apple jest poza zakresem etapu 2. Nie dodawaj go.
+
+## Gotowe, gdy
+
+Nowy użytkownik zakłada konto e-mailem albo przez Google, wybiera szablony, zalicza dzień, ogląda wczoraj i jutro bez możliwości zmiany, dodaje blok na początek ścieżki, zmienia ustawienia, włącza powiadomienia na telefonie i dostaje wieczorne przypomnienie. Dane z etapu 1 są nadal dostępne na pierwszym koncie. Testy są zielone, ekrany zgadzają się z makietami.

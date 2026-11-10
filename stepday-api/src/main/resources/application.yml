@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: stepday-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/stepday}
+    username: ${DB_USER:stepday}
+    password: ${DB_PASSWORD:stepday}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 300ms
+      connect-timeout: 300ms
+
+server:
+  servlet:
+    context-path: /api
+
+management:
+  health:
+    redis:
+      enabled: ${CACHE_ENABLED:false}
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+stepday:
+  cache:
+    # Redis is only a cache; the app must work with it disabled.
+    enabled: ${CACHE_ENABLED:false}
+  auth:
+    # Single-user auth until a real login module exists (docs/decisions.md, D-AUTH).
+    username: ${STEPDAY_USER:stepday}
+    password: ${STEPDAY_PASSWORD:stepday}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+    tags-sorter: alpha
+    persist-authorization: true

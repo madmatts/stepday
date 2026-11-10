@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: stepday
+      POSTGRES_USER: stepday
+      POSTGRES_PASSWORD: stepday
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stepday"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+
+  api:
+    build:
+      context: .
+      dockerfile: stepday-api/Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/stepday
+      REDIS_HOST: redis
+      CACHE_ENABLED: "true"
+      STEPDAY_USER: ${STEPDAY_USER:-stepday}
+      STEPDAY_PASSWORD: ${STEPDAY_PASSWORD:-stepday}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "8080:8080"
+
+  web:
+    build: ./stepday-web
+    depends_on:
+      - api
+    ports:
+      - "8000:80"
+
+volumes:
+  db-data:

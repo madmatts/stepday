@@ -1,0 +1,31 @@
+/* Tokeny z makiet (docs/claude/conventions.md). Nie dodawaj kolorów spoza makiet. */
+:root {
+  --bg: #F2F5F7;
+  --surface: #FFFFFF;
+  --surface-2: #F7F9FB;
+  --muted-bg: #E7ECF0;
+  --border: #D5DDE4;
+  --divider: #E1E7EC;
+  --text: #14202B;
+  --text-2: #3F4F5E;
+  --text-3: #556575;
+  --icon-muted: #7A8B9B;
+  --accent: #2D5BFF;
+  --accent-ink: #1F44C8;
+  --accent-soft: #E6ECFF;
+  --ok: #1F7A4D;
+  --ok-ink: #14602F;
+  --ok-soft: #E3F4EA;
+  --partial-ink: #8A4B08;
+  --partial-soft: #FDF0D5;
+  --partial-dot: #B7791F;
+  --miss: #B42318;
+  --miss-soft: #FBE9E7;
+
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --shadow-active: 0 10px 28px rgba(45, 91, 255, 0.16);
+  --shadow-segment: 0 1px 3px rgba(20, 32, 43, 0.15);
+  --tap: 44px;
+}

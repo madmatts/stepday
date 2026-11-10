@@ -1,0 +1,55 @@
+Jesteś głównym programistą aplikacji Stepday (stepday.pl). Zbuduj ją na podstawie dwóch źródeł prawdy. Nie wymyślaj własnego designu ani własnego modelu danych.
+
+## Źródła prawdy
+
+1. Dokument z warstwą danych i zasadami działania: https://claude.ai/artifact/SnrchJn1CzUNj2n9rksqkC
+2. Makiety ekranów (canvas, osiem plansz 390 px): https://claude.ai/artifact/JQX4MLH2DzerF97cmeMvcc
+
+Przeczytaj oba w całości, zanim napiszesz pierwszą linię kodu. Makiety czytaj narzędziem Artifact (akcja read, pliki project/*.dc.html i canvas.json). Dokument czytaj narzędziami Claude Docs, jeśli je masz.
+Jeśli któregoś źródła nie możesz otworzyć, przerwij i poproś mnie o eksport: dokument jako Markdown do docs/stepday-data-layer.md, makiety jako zrzuty ekranu do docs/mockups/. Nie zgaduj brakującej treści.
+
+Zasady pierwszeństwa: dla danych i zachowania wygrywa dokument, dla wyglądu i układu makiety. Jeśli widzisz sprzeczność między nimi, wypisz ją i zapytaj mnie, nie rozstrzygaj sam.
+
+## Czym jest Stepday
+
+Mobilna (mobile first) aplikacja PWA, gamifikowany przewodnik dnia dla osoby z ADHD. Dzień to ścieżka bloków połączonych jednokierunkowymi strzałkami. Każdy typ bloku zalicza się inaczej: LIST, BOOLEAN, COUNTER, TIMER, NOTE. Zaliczony dzień przesuwa pionek o jedno pole na planszy. Użytkownik sam projektuje swoje rytuały.
+
+## Stack i ograniczenia
+
+Java i Spring Boot, PostgreSQL (migracje Flyway), Redis wyłącznie jako cache, Vue.js z Vite, Docker Compose. Ja mam iPhone'a i nie mam Maca, więc wyłącznie PWA, bez natywnego iOS. Web Push działa tylko w zainstalowanej PWA, uwzględnij to w UX. Projekt: moduły stepday-api i stepday-web, pakiet pl.stepday.
+
+## Reguły, których nie wolno zgubić
+
+(Pełna wersja jest w dokumencie, to tylko lista kontrolna.)
+
+- Blok = typ + rola. STEP leży na ścieżce, ALL_DAY działa obok ścieżki (np. woda, bo nie da się jej zaliczyć jednym krokiem).
+- Szablon a instancja: instancja przechowuje zamrożoną kopię definicji, więc edycja szablonu nie zmienia historii.
+- Licznik zalicza dzień od progu 80%: ceil(cel * 0.8), np. 7 z 8.
+- Stany dnia: OPEN, FULL, PARTIAL ("z niedosytem": pominięte kroki albo licznik między progiem a celem, bursztynowa kropka), MISSED. FULL i PARTIAL liczą się jako dni zaliczone. "Pomiń" i "Później" nie kosztują punktów ani serii.
+- Polityka zaległych: CARRY_OVER przenosi blok na kolejny dzień (stan CARRIED w dniu źródłowym, nowa instancja z carried_from_id), najwyżej 2 razy (carry_count). DROP albo wyczerpany limit: blok dostaje stan MISSED, dzień też dostaje MISSED. Wpis nigdy nie jest usuwany, zmienia się tylko jego stan.
+- Podsumowanie tygodnia jest liczone, a nie zapisywane. SUCCESS (zielony ptaszek, konfetti, napis "Sukces") tylko gdy wszystkie 7 dni są FULL. W przeciwnym razie GAPS z listą: który dzień i co dokładnie.
+- Harmonogram przez RRULE (ical4j, jedna implementacja po stronie backendu, endpoint /schedule/preview). Przykład kontrolny: FREQ=MONTHLY;INTERVAL=3 od 2026-11-10 daje 10.11.2026, 10.02.2027, 10.05.2027.
+- Dzień generuje się leniwie i idempotentnie (ensureDay, częściowy unikalny indeks). Granica dnia to day_start (domyślnie 04:00) w strefie użytkownika, nocne zamykanie dni osobno dla każdej strefy.
+- Offline: kolejka zdarzeń z UUID nadawanymi po stronie klienta, licznik jako suma counter_event (delty).
+- Interfejs po polsku, cele dotykowe co najmniej 44 px, tokeny kolorów i fonty (Space Grotesk, Inter) wzięte z makiet.
+
+## Otwarte decyzje
+
+Dokument ma sekcję "Otwarte decyzje" (sześć pytań). Nie rozstrzygaj ich po cichu. Dla każdej wybierz rekomendowaną opcję, zapisz ją w docs/decisions.md razem z uzasadnieniem i zaimplementuj tak, żeby zmiana była tania. Na koniec każdego etapu wypisz, co założyłeś.
+
+## Sposób pracy
+
+1. Najpierw plan: przeczytaj źródła i zaproponuj kolejność prac zgodną z sekcją "Plan wdrożenia" w dokumencie. Zaczekaj na moje "OK", zanim zaczniesz kodować.
+2. Napisz CLAUDE.md (reguły z listy kontrolnej, komendy build i test, konwencje), a szczegóły rozbij na pliki importowane przez @.
+3. Jedziesz etapami według planu z dokumentu: migracje i encje, szablony i reguły, generowanie dnia, zaliczanie, zamknięcie dnia, podsumowanie tygodnia, front, PWA. Każdy etap kończy się zielonymi testami, zanim ruszysz następny.
+4. Testy to wymóg, nie dodatek: PostgreSQL w Testcontainers, testy tabelaryczne dla progów licznika (6, 7, 8 z 8), idempotencji ensureDay, limitu CARRY_OVER, przełączenia czasu letniego i test podsumowania tygodnia na danych z makiety "Braki" (środa MISSED, piątek PARTIAL).
+5. Front: każdy ekran porównaj z makietą w przeglądarce (Playwright, szerokość 390 px) i zrób zrzut. Odchylenia opisz.
+6. Małe, opisowe commity. Nie pushuj na main bez mojej zgody.
+
+## Zanim zapytasz
+
+Pytaj tylko wtedy, gdy decyzja jest nieodwracalna albo źródła są sprzeczne. W pozostałych sprawach przyjmij rozsądną wartość domyślną, zapisz ją w docs/decisions.md i pracuj dalej.
+
+## Gotowe, gdy
+
+Działa docker compose up (API, baza, front), główny scenariusz przechodzi od początku do końca: utworzenie rytuału, zaliczenie dnia, zamknięcie dnia, podsumowanie tygodnia. Testy są zielone, ekrany zgadzają się z makietami, a docs/decisions.md zawiera wszystkie przyjęte założenia.
