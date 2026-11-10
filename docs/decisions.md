@@ -119,3 +119,6 @@ Dzień bez żadnego bloku ma według reguł z dokumentu status `FULL` (nic nie j
 
 ### A27. Front: nawigacja, logowanie, przechowywanie
 Nawigacja do „Układu dnia” i „Podsumowania tygodnia” to dwie ikony w wierszu „Stepday” (makiety nie pokazują nawigacji). Dane logowania (Basic, A2) leżą w `localStorage`. Przy prawdziwym logowaniu zastąpi je sesja albo token. Kafelki dni na planszy prowadzą do widoku danego dnia (dni zamknięte tylko do odczytu).
+
+### A28. PWA: offline i aktualizacje
+Zapisy idą przez kolejkę w IndexedDB (`src/sync/outbox.ts`). Online: od razu do serwera, chyba że w kolejce coś czeka (wtedy na koniec kolejki, żeby zachować kolejność). Offline: zapis w kolejce + lokalny podgląd zmiany na ostatniej kopii dnia. Stan dnia po synchronizacji zawsze z serwera. Kolejka wysyła się przy `online`, po powrocie do aplikacji i co 30 s. Odpowiedź 4xx (np. 409 — dzień zamknięty, A20) usuwa zmianę i pokazuje komunikat. Service worker: precache aplikacji + NetworkFirst dla `GET /api/days/*`. Nowa wersja aplikacji aktywuje się bez przeładowania otwartej strony.

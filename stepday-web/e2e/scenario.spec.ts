@@ -100,3 +100,32 @@ test('skip and later cost nothing and reorder the path', async ({ page }) => {
   await expect(page.getByText('Dzień zaliczony', { exact: true })).toBeVisible()
   await expect(page.getByText('Z niedosytem: spacer pominięte.', { exact: false })).toBeVisible()
 })
+
+test('offline: changes queue up and sync when the network is back', async ({ page, context }) => {
+  await page.goto('/blocks/new')
+  await page.getByRole('button', { name: /^Licznik/ }).click()
+  await page.getByLabel('Nazwa').fill('Woda')
+  await page.getByRole('button', { name: 'Zapisz blok' }).click()
+  // „0/8” jest też w podglądzie edytora — czekamy na ekran dnia.
+  await expect(page.getByText('kroków dziś')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Dodaj: Woda' })).toBeEnabled()
+  await page.evaluate(() => navigator.serviceWorker.ready)
+
+  await context.setOffline(true)
+  const plus = page.getByRole('button', { name: 'Dodaj: Woda' })
+  await plus.click()
+  await plus.click()
+  await expect(page.getByText('2/8', { exact: true })).toBeVisible()
+  await expect(page.getByRole('status')).toContainText('2 zmiany czekają')
+
+  // Ponowne otwarcie bez sieci: kopia dnia z nałożonymi zmianami.
+  await page.reload()
+  await expect(page.getByText('2/8', { exact: true })).toBeVisible()
+
+  await context.setOffline(false)
+  await page.evaluate(() => window.dispatchEvent(new Event('online')))
+  await expect(page.getByRole('status')).toHaveCount(0)
+  const res = await page.request.get('/api/days/today', { headers: { Authorization: AUTH } })
+  const json = await res.json()
+  expect(json.allDay[0].value).toBe(2)
+})

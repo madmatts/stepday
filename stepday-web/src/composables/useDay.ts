@@ -1,5 +1,6 @@
-import { computed, shallowReadonly, shallowRef, toValue, watch, type MaybeRefOrGetter } from 'vue'
+import { computed, onScopeDispose, shallowReadonly, shallowRef, toValue, watch, type MaybeRefOrGetter } from 'vue'
 import { api, ApiError } from '@/api/client'
+import { cachedDay, isOffline, onSyncState, rememberDay } from '@/sync/outbox'
 import { dayMutations } from '@/api/mutations'
 import type { BlockView, DayView } from '@/api/types'
 
@@ -11,18 +12,38 @@ export function useDay(date: MaybeRefOrGetter<string | null>) {
   const day = shallowRef<DayView | null>(null)
   const error = shallowRef<string | null>(null)
   const busy = shallowRef(false)
+  /** Widok pochodzi z kopii lokalnej (brak sieci). */
+  const offline = shallowRef(false)
 
   async function load() {
     const d = toValue(date)
     error.value = null
     try {
-      day.value = await api<DayView>(d ? `/days/${d}` : '/days/today')
+      const fresh = await api<DayView>(d ? `/days/${d}` : '/days/today')
+      await rememberDay(fresh)
+      // Zmiany czekające w kolejce nakładamy także na świeży widok, dopóki nie dojdą do serwera.
+      day.value = (await cachedDay(fresh.date)) ?? fresh
+      offline.value = false
     } catch (e) {
-      error.value = e instanceof Error ? e.message : String(e)
+      if (isOffline(e)) {
+        offline.value = true
+        day.value = await cachedDay(d)
+        if (!day.value) error.value = 'Brak sieci i brak zapisanej kopii tego dnia'
+      } else {
+        error.value = e instanceof Error ? e.message : String(e)
+      }
     }
   }
 
   watch(() => toValue(date), load, { immediate: true })
+
+  // Po wysłaniu kolejki odświeżamy widok z serwera (stan dnia liczy serwer).
+  let lastPending = 0
+  const stop = onSyncState(({ pending }) => {
+    if (lastPending > 0 && pending === 0) void load()
+    lastPending = pending
+  })
+  onScopeDispose(stop)
 
   /** Bieżący krok („TERAZ”): pierwszy oczekujący, potem odłożone na „Później”. */
   const currentStepId = computed(() => {
@@ -40,6 +61,7 @@ export function useDay(date: MaybeRefOrGetter<string | null>) {
       if (next) day.value = next
     } catch (e) {
       error.value = e instanceof ApiError ? e.message : 'Nie udało się zapisać'
+      if (e instanceof ApiError && e.status === 409) void load()
     } finally {
       busy.value = false
     }
@@ -64,6 +86,7 @@ export function useDay(date: MaybeRefOrGetter<string | null>) {
     day: shallowReadonly(day),
     error: shallowReadonly(error),
     busy: shallowReadonly(busy),
+    offline: shallowReadonly(offline),
     currentStepId,
     reload: load,
     /** Podmiana widoku z zewnątrz (kolejka offline nakłada lokalne zmiany). */
@@ -72,4 +95,4 @@ export function useDay(date: MaybeRefOrGetter<string | null>) {
   }
 }
 
-export type DayActions = Omit<ReturnType<typeof useDay>, 'day' | 'error' | 'busy' | 'currentStepId' | 'reload' | 'replace'>
+export type DayActions = Omit<ReturnType<typeof useDay>, 'day' | 'error' | 'busy' | 'offline' | 'currentStepId' | 'reload' | 'replace'>

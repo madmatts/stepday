@@ -5,7 +5,7 @@ Wymagania: Java 25, Maven 3.9, Node 20, Docker (Testcontainers potrzebuje dział
 | Cel | Komenda (z katalogu repo) |
 |---|---|
 | Testy backendu (Testcontainers) | `mvn -B test` |
-| Jeden test | `mvn -B -pl stepday-api test -Dtest=CounterThresholdTest` |
+| Jeden test | `mvn -B -pl stepday-api test -Dtest=CompletionApiTest` |
 | Build jar | `mvn -B -pl stepday-api package` |
 | Front: dev (proxy `/api` → `:8080`) | `cd stepday-web && npm run dev` |
 | Front: testy jednostkowe | `cd stepday-web && npm test` |

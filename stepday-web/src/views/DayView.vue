@@ -12,6 +12,7 @@ import CompactStep from '@/components/day/CompactStep.vue'
 import PathArrow from '@/components/day/PathArrow.vue'
 import EndOfDay from '@/components/day/EndOfDay.vue'
 import InstallHint from '@/components/common/InstallHint.vue'
+import SyncBanner from '@/components/common/SyncBanner.vue'
 
 const route = useRoute()
 const dateParam = computed(() => (route.params.date as string | undefined) ?? null)
@@ -50,6 +51,7 @@ const previousWeek = computed(() => day.value ? addDays(mondayOf(day.value.date)
       </header>
 
       <InstallHint />
+      <SyncBanner />
 
       <BoardWeekStrip :week="day.week" :board="day.board" :progress="day.progress" :selected-date="day.date" />
 
