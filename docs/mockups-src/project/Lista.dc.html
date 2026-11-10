@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Konfiguracja bloku: lista</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif}
+button,input{font-family:inherit}
+button{cursor:pointer}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1180px; box-sizing: border-box; background: #F2F5F7; color: #14202B; display: flex; flex-direction: column; padding: 16px 16px 32px; gap: 18px">
+
+  <header style="display: flex; align-items: center; gap: 8px; min-height: 48px">
+    <button type="button" aria-label="Wróć" style="width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; margin-left: -8px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14202B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <h1 style="margin: 0; flex: 1; font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700">Nowy blok</h1>
+  </header>
+
+  <div style="display: flex; align-items: center; justify-content: space-between">
+    <span style="display: inline-flex; align-items: center; gap: 8px; background: #E6ECFF; color: #1F44C8; font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 999px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F44C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1.2 1.2L7 5M3.5 12l1.2 1.2L7 11M3.5 18l1.2 1.2L7 17"/></svg>
+      Lista
+    </span>
+    <button type="button" style="min-height: 44px; padding: 0 8px; border: 0; background: transparent; font-size: 14px; font-weight: 600; color: #1F44C8">Zmień typ</button>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 6px">
+    <label for="name" style="font-size: 13px; font-weight: 600">Nazwa</label>
+    <input id="name" type="text" value="Tabletki rano" style="height: 52px; border-radius: 14px; border: 1px solid #D5DDE4; background: #FFFFFF; padding: 0 14px; font-size: 16px; color: #14202B; box-sizing: border-box; width: 100%">
+  </div>
+
+  <section aria-label="Pozycje" style="display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 13px; font-weight: 600">Pozycje na liście</div>
+
+    <div style="display: flex; align-items: center; gap: 4px; min-height: 56px; padding: 0 6px 0 4px; border-radius: 14px; border: 1px solid #D5DDE4; background: #FFFFFF">
+      <button type="button" aria-label="Zmień kolejność: Witamina D3" style="width: 36px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="#7A8B9B" aria-hidden="true"><circle cx="4" cy="4" r="1.6"/><circle cx="10" cy="4" r="1.6"/><circle cx="4" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="4" cy="16" r="1.6"/><circle cx="10" cy="16" r="1.6"/></svg>
+      </button>
+      <label for="item1" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Pozycja 1</label>
+      <input id="item1" type="text" value="Witamina D3" style="flex: 1; min-width: 0; height: 44px; border: 0; background: transparent; font-size: 16px; color: #14202B">
+      <button type="button" aria-label="Usuń pozycję: Witamina D3" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#556575" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 4px; min-height: 56px; padding: 0 6px 0 4px; border-radius: 14px; border: 1px solid #D5DDE4; background: #FFFFFF">
+      <button type="button" aria-label="Zmień kolejność: Magnez" style="width: 36px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="#7A8B9B" aria-hidden="true"><circle cx="4" cy="4" r="1.6"/><circle cx="10" cy="4" r="1.6"/><circle cx="4" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="4" cy="16" r="1.6"/><circle cx="10" cy="16" r="1.6"/></svg>
+      </button>
+      <label for="item2" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Pozycja 2</label>
+      <input id="item2" type="text" value="Magnez" style="flex: 1; min-width: 0; height: 44px; border: 0; background: transparent; font-size: 16px; color: #14202B">
+      <button type="button" aria-label="Usuń pozycję: Magnez" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#556575" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 4px; min-height: 56px; padding: 0 6px 0 4px; border-radius: 14px; border: 1px solid #D5DDE4; background: #FFFFFF">
+      <button type="button" aria-label="Zmień kolejność: Omega-3" style="width: 36px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="#7A8B9B" aria-hidden="true"><circle cx="4" cy="4" r="1.6"/><circle cx="10" cy="4" r="1.6"/><circle cx="4" cy="10" r="1.6"/><circle cx="10" cy="10" r="1.6"/><circle cx="4" cy="16" r="1.6"/><circle cx="10" cy="16" r="1.6"/></svg>
+      </button>
+      <label for="item3" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Pozycja 3</label>
+      <input id="item3" type="text" value="Omega-3" style="flex: 1; min-width: 0; height: 44px; border: 0; background: transparent; font-size: 16px; color: #14202B">
+      <button type="button" aria-label="Usuń pozycję: Omega-3" style="width: 44px; height: 44px; border: 0; background: transparent; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#556575" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <button type="button" style="display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: 14px; border: 2px dashed #7A8B9B; background: transparent; font-size: 15px; font-weight: 600; color: #1F44C8">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F44C8" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      Dodaj pozycję
+    </button>
+  </section>
+
+  <section aria-label="Kiedy i gdzie" style="display: flex; flex-direction: column; gap: 10px">
+
+    <button type="button" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border-radius: 16px; border: 1px solid #D5DDE4; background: #FFFFFF; text-align: left; color: #14202B; width: 100%; box-sizing: border-box">
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 500; color: #556575">Kiedy</span>
+        <span style="font-size: 16px; font-weight: 600">Codziennie</span>
+      </span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A8B9B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 13px; font-weight: 600">Rola w dniu</div>
+      <div role="group" aria-label="Rola w dniu" style="display: flex; gap: 4px; background: #E7ECF0; border-radius: 14px; padding: 4px">
+        <button type="button" aria-pressed="true" style="flex: 1; min-height: 48px; border-radius: 11px; border: 0; background: #FFFFFF; box-shadow: 0 1px 3px rgba(20,32,43,0.15); font-size: 14px; font-weight: 600; color: #14202B">Krok w ścieżce</button>
+        <button type="button" aria-pressed="false" style="flex: 1; min-height: 48px; border-radius: 11px; border: 0; background: transparent; font-size: 14px; font-weight: 600; color: #3F4F5E">W ciągu dnia</button>
+      </div>
+      <div style="font-size: 12px; line-height: 1.45; color: #556575">Krok pojawia się w ścieżce we właściwym miejscu i prowadzi dalej, gdy go zaliczysz. Blok „w ciągu dnia” czeka obok i nie blokuje ścieżki.</div>
+    </div>
+
+    <button type="button" style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border-radius: 16px; border: 1px solid #D5DDE4; background: #FFFFFF; text-align: left; color: #14202B; width: 100%; box-sizing: border-box">
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 500; color: #556575">Miejsce w ścieżce</span>
+        <span style="font-size: 16px; font-weight: 600">Po: Otworzyć okno, rozciągnąć się</span>
+      </span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7A8B9B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    <div style="display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 14px; border-radius: 16px; border: 1px solid #D5DDE4; background: #FFFFFF; box-sizing: border-box">
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; font-weight: 500; color: #556575">Przypomnienie</span>
+        <span style="font-size: 16px; font-weight: 600">7:30</span>
+      </span>
+      <button type="button" role="switch" aria-checked="true" aria-label="Przypomnienie" style="width: 52px; height: 32px; border-radius: 16px; border: 0; background: #2D5BFF; position: relative; padding: 0; flex: none">
+        <span style="position: absolute; top: 4px; left: 24px; width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF"></span>
+      </button>
+    </div>
+
+  </section>
+
+  <button type="button" style="min-height: 56px; border-radius: 16px; border: 0; background: #2D5BFF; color: #FFFFFF; font-size: 16px; font-weight: 600; margin-top: 4px">Zapisz blok</button>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

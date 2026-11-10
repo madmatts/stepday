@@ -1,0 +1,14 @@
+target/
+node_modules/
+dist/
+dev-dist/
+*.log
+.idea/
+.vscode/
+stepday-web/test-results/
+stepday-web/playwright-report/
+.env
+
+# Eksporty właściciela (nie commitujemy; kopia robocza: docs/stepday-data-layer.md)
+docs/Stepday warstwa danych*.md
+docs/Stepday · widok dnia.pdf
