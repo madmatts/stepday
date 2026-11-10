@@ -10,6 +10,10 @@ Dzień to ścieżka bloków. Zaliczony dzień przesuwa pionek o jedno pole na pl
 - Dla danych i zachowania wygrywa dokument, dla wyglądu makiety. Sprzeczność między nimi: wypisz i zapytaj, nie rozstrzygaj sam.
 - Nie wymyślaj własnego designu ani modelu danych. Każde założenie zapisz w `docs/decisions.md`.
 
+## Historia
+
+Przeczytaj `docs/claude/session-log.md` na początku sesji: co zrobiono, otwarte sprawy, znane pułapki. Na końcu sesji dopisz swój wpis na górze.
+
 ## Szczegóły
 
 @docs/claude/rules.md
