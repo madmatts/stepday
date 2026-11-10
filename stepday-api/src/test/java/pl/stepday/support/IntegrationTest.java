@@ -53,6 +53,28 @@ public abstract class IntegrationTest {
         clock.set(NOV_10_NOON);
     }
 
+    /** Tworzy szablon przez API i zwraca jego id. */
+    protected UUID createTemplate(String body) throws Exception {
+        String json = mvc.perform(post("/templates").content(body))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        return UUID.fromString(com.jayway.jsonpath.JsonPath.read(json, "$.id"));
+    }
+
+    protected java.util.Map<String, UUID> createMockupTemplates() throws Exception {
+        java.util.Map<String, UUID> ids = new java.util.LinkedHashMap<>();
+        for (String body : Mockup.ALL) {
+            ids.put(com.jayway.jsonpath.JsonPath.read(body, "$.name"), createTemplate(body));
+        }
+        return ids;
+    }
+
+    protected String json(MockHttpServletRequestBuilder request) throws Exception {
+        return mvc.perform(request)
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.status().is2xxSuccessful())
+                .andReturn().getResponse().getContentAsString();
+    }
+
     protected static MockHttpServletRequestBuilder get(String url, Object... vars) {
         return auth(MockMvcRequestBuilders.get(url, vars));
     }

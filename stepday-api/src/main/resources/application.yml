@@ -15,12 +15,17 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      timeout: 300ms
+      connect-timeout: 300ms
 
 server:
   servlet:
     context-path: /api
 
 management:
+  health:
+    redis:
+      enabled: ${CACHE_ENABLED:false}
   endpoints:
     web:
       exposure:

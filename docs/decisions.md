@@ -77,3 +77,18 @@ Indeks ułamkowy z alfabetem `[0-9a-z]` (porządek identyczny w Javie i w Postgr
 
 ### A13. Pozycje listy przy edycji szablonu
 Pozycje z `id` są aktualizowane, nowe dodawane, usunięte archiwizowane (`archived_at`), nigdy kasowane.
+
+### A14. Dni przyszłe
+`GET /days/{date}` dla daty po „dziś” zwraca 400 i niczego nie generuje — wygenerowanie dnia zamroziłoby definicję bloków z wyprzedzeniem. Planowanie przyszłości to ekran „Układ dnia” (`GET /layout?date=`). „Dziś” liczy serwer (`GET /days/today`).
+
+### A15. Cache dnia w Redisie
+Klucz `day:<user>:<date>`, TTL 10 min, zbiór-indeks per użytkownik. Każdy zapis unieważnia **wszystkie** dni użytkownika (pasek tygodnia, plansza i seria zależą od innych dni). Timeout 300 ms; po błędzie cache jest omijany przez 30 s (bezpiecznik), żeby awaria Redisa nie spowalniała API. Ryzyko: nieudane unieważnienie w czasie awarii może zostawić nieaktualny wpis do wygaśnięcia TTL. Domyślnie cache wyłączony (`CACHE_ENABLED=false`), w docker compose włączony.
+
+### A16. Plansza: numer pola
+Makieta pokazuje 10.11 „pole 10 z 30” i „po ostatnim kroku przechodzisz na pole 11”, więc pionek stoi na polu *(zaliczone dni miesiąca do dziś włącznie) + 1*, maksymalnie liczba dni miesiąca (D1). Nowy miesiąc = nowa plansza.
+
+### A17. „Z kalendarza”
+Flaga `fromCalendar` w widoku dnia = reguła szablonu nie jest codzienna (ta sama definicja co A11). Wyliczana przy odczycie z bieżącej reguły szablonu (to informacja do wyświetlenia, nie część zamrożonej historii).
+
+### A18. Postęp „kroków dziś”
+`progress.done` = kroki (`STEP`) w stanie `DONE`; `total` = kroki dnia bez `CARRIED`. Pominięte nie liczą się jako zrobione (jak w makiecie). Bloki `ALL_DAY` nie wchodzą do licznika kroków, ale wchodzą do stanu dnia.

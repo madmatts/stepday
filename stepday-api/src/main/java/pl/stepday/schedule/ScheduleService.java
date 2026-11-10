@@ -56,11 +56,15 @@ public class ScheduleService {
      * (dokument, sekcja 4), DROP dla codziennych. Jednorazowe (COUNT=1) też CARRY_OVER.
      */
     public OverduePolicy defaultOverduePolicy(String rrule) {
+        return isEveryDay(rrule) ? OverduePolicy.DROP : OverduePolicy.CARRY_OVER;
+    }
+
+    /** Reguła codzienna (FREQ=DAILY, INTERVAL=1, nie jednorazowa). Inne bloki są „z kalendarza”. */
+    public boolean isEveryDay(String rrule) {
         Recur<LocalDate> recur = parse(rrule);
-        boolean everyDay = recur.getFrequency() == Frequency.DAILY
+        return recur.getFrequency() == Frequency.DAILY
                 && Math.max(recur.getInterval(), 1) == 1
                 && recur.getCount() != 1;
-        return everyDay ? OverduePolicy.DROP : OverduePolicy.CARRY_OVER;
     }
 
     /** Waliduje regułę; rzuca {@link InvalidRuleException} dla błędnej składni. */
