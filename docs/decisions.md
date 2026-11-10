@@ -113,3 +113,9 @@ Zadanie co minutę (`stepday.closing.interval`, domyślnie `PT1M`); dzień D zam
 
 ### A25. Podsumowanie tygodnia: kształt odpowiedzi
 `GET /weeks/{weekStart}/summary` (weekStart = poniedziałek, inaczej 400). Pola: `outcome` (`SUCCESS`|`GAPS`), `finished` (false, gdy tydzień trwa — dni przyszłe/otwarte mają `status: null`), `counts` (full/partial/missed/completed), `days[]`, `gaps[]`. `gaps` pochodzi z zapytania z dokumentu (dosłownie) + `config` dla jednostki i progu; dni bez wiersza `day` dochodzą jako `MISSED` z pustą listą bloków. Teksty („Nie odhaczono: …”, „brakowało 1”) składa front z danych.
+
+### A26. Pusty dzień
+Dzień bez żadnego bloku ma według reguł z dokumentu status `FULL` (nic nie jest niezaliczone). UI nie pokazuje wtedy „Dzień zaliczony”, tylko zachętę „Zaprojektuj pierwszy rytuał”. Dane zostają zgodne z regułą.
+
+### A27. Front: nawigacja, logowanie, przechowywanie
+Nawigacja do „Układu dnia” i „Podsumowania tygodnia” to dwie ikony w wierszu „Stepday” (makiety nie pokazują nawigacji). Dane logowania (Basic, A2) leżą w `localStorage`. Przy prawdziwym logowaniu zastąpi je sesja albo token. Kafelki dni na planszy prowadzą do widoku danego dnia (dni zamknięte tylko do odczytu).
