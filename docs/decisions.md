@@ -67,3 +67,13 @@ Service worker i Web Push wymagają HTTPS (poza `localhost`). `docker compose up
 
 ### A10. stepday-web poza Mavenem
 `stepday-web` to projekt npm budowany przez npm i Docker; root `pom.xml` agreguje tylko `stepday-api`.
+
+### A11. „Rzadsza niż codzienna” (domyślna polityka zaległych)
+`DROP` tylko dla `FREQ=DAILY` z `INTERVAL=1` bez `COUNT=1`. Wszystko inne (tygodniowe, co N dni, miesięczne, jednorazowe) dostaje `CARRY_OVER`. Jawne `overduePolicy` z ekranu „Kiedy” zawsze wygrywa. `POST /schedule/preview` zwraca `defaultOverduePolicy`, żeby front nie powielał reguły.
+Zmiana: `ScheduleService.defaultOverduePolicy`.
+
+### A12. `sort_key`
+Indeks ułamkowy z alfabetem `[0-9a-z]` (porządek identyczny w Javie i w PostgreSQL niezależnie od kolacji). Jedna przestrzeń kluczy dla obu ról. `afterTemplateId` wstawia blok za wskazanym, bez przenumerowania pozostałych.
+
+### A13. Pozycje listy przy edycji szablonu
+Pozycje z `id` są aktualizowane, nowe dodawane, usunięte archiwizowane (`archived_at`), nigdy kasowane.
